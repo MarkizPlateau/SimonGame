@@ -6,17 +6,15 @@ let userClickedPattern = [];
 let level = 0;
 let started = false;
 
-
-
 $(".btn").on("click", function(){
 
-  userClickedPattern.push(this.id);
   playSound(this.id);
   $("#" + this.id).fadeOut(100).fadeIn(100);
   animatePress(this.id);
 
-  if (userClickedPattern.length === gamePattern.length){
-    checkAnswer();
+  if (started) {
+    userClickedPattern.push(this.id);
+    checkAnswer(userClickedPattern.length);
   }
 
 });
@@ -49,10 +47,9 @@ function animatePress(currentColour){
   }, 100);
 }
 
-function checkAnswer(){
+function checkAnswer(index){
   let answer = true;
-  for (let i = 0; i < gamePattern.length; i++){
-    if(gamePattern[i] !== userClickedPattern[i]){
+  if(userClickedPattern[index-1] !== gamePattern[index-1]){
 
         $("body").addClass("game-over");
         setTimeout(function () {
@@ -63,9 +60,9 @@ function checkAnswer(){
         wrong.play();
         answer = false;
         startOver();
-      }
-    }
-  if (answer){
+  }
+
+  if (userClickedPattern.length === gamePattern.length && answer){
 
     setTimeout(function () {
       nextSequence();
